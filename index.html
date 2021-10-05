@@ -1,12 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js"></script>
+    <style>
+        :root {
+            --HEIGHT: 30px;
+        }
+
+        * {
+            font-family: "Open Sans", serif;
+        }
+
+        div {
+            min-height: var(--HEIGHT);
+            line-height: var(--HEIGHT);
+        }
+
+        input {
+            padding: 10px;
+        }
+    </style>
     <title>Document</title>
 </head>
 <body>
-    
+    <label for="input-graph-name">
+        <input type="text" id="input-graph-name">
+    </label>
+    <hr>
+    <div id="output-graph-path"></div>
+    <hr>
+    <div id="output-graph-result"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>

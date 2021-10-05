@@ -1,4 +1,4 @@
-const object = {
+const matrix = {
     a: ['b', 'e', 'g', 'h', 'i', 'k'],
     b: ['a', 'c', 'e', 'g', 'j', 'k'],
     c: ['b', 'f', 'g', 'l', 'm'],
@@ -15,7 +15,17 @@ const object = {
     n: ['l', 'i'],
 };
 
-searchGraph('l');
+const outputPathNode = document.getElementById('output-graph-path');
+const outputResultNode = document.getElementById('output-graph-result');
+const inputGraphNode = document.getElementById('input-graph-name');
+
+inputGraphNode.addEventListener('input', ({ target }) => {
+    const valueLower = target.value.toLowerCase();
+
+    if (valueLower.length === 1) {
+        searchGraph(valueLower);
+    }
+});
 
 function searchGraph(sought, startArr) {
     if (!sought) {
@@ -24,29 +34,50 @@ function searchGraph(sought, startArr) {
 
     const visited = [];
     const history = [];
-    const queue = startArr ? startArr : object[sought];
+    const matrixClone = getMatrixClone();
+    const queue = startArr ? startArr : matrixClone[sought];
+
+    outputPathNode.innerHTML = '';
 
     if (!queue) {
-        console.log(`Is absent - ${sought}`);
+        outputResultNode.innerHTML = `Is absent - ${sought}`;
         return;
     }
 
     let counter = 0;
+    let pathOutput = '';
     let historyCounter = 1;
     let graphName = sought;
-    let graphCurrent = startArr ? startArr : object[sought];
+    let graphCurrent = startArr ? startArr : matrixClone[sought];
     let graphLen = graphCurrent.length;
+    let timestampStart = performance.now();
 
-    for (let i = 0; i < queue.length; i++) {
+    for (const item of queue) {
         const node = queue.shift();
 
         if (!visited.includes(node)) {
             if (node === sought) {
-                console.log(`Found - ${node}. Position - ${counter}. Graph key - ${graphName}. Graph value - ${graphCurrent}. Graph depth - ${historyCounter}`);
+                const timeDiff = performance.now() - timestampStart;
+
+                pathOutput += node;
+
+                outputPathNode.innerHTML = pathOutput;
+                outputResultNode.innerHTML = `
+                    Found - <strong>${node}</strong>.
+                    Position - <strong>${counter}</strong>.
+                    GraphKey - <strong>${graphName}</strong>.
+                    GraphValue - <strong>[${graphCurrent}]</strong>.
+                    GraphDepth - <strong>${historyCounter}</strong>.
+                    MS - <strong>${timeDiff}</strong>.
+                `;
+
                 return;
             } else {
-                console.log(node);
-                queue.push(...object[node]);
+                pathOutput += `${node} => `;
+
+                outputPathNode.innerHTML = pathOutput;
+
+                queue.push(...matrixClone[node]);
                 visited.push(node);
             }
         }
@@ -57,12 +88,20 @@ function searchGraph(sought, startArr) {
 
         if (counter === graphLen) {
             graphName = history[graphLen - counter];
-            graphCurrent = object[graphName];
+            graphCurrent = matrixClone[graphName];
             graphLen = graphCurrent.length;
             counter = 0;
             historyCounter++;
         }
     }
 
-    console.log('No matches found');
+    outputResultNode.innerHTML = 'No matches found';
+}
+
+function getMatrixClone() {
+    const matrixClone = {};
+
+    Object.keys(matrix).forEach(key => { matrixClone[key] = [...matrix[key]] });
+
+    return matrixClone;
 }
