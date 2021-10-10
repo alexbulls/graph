@@ -48,7 +48,7 @@ function searchGraph(sought, startArr) {
     let pathOutput = '';
     let historyCounter = 1;
     let graphName = sought;
-    let graphCurrent = startArr ? startArr : matrixClone[sought];
+    let graphCurrent = queue;
     let graphLen = graphCurrent.length;
     let timestampStart = performance.now();
 
